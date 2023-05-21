@@ -2,7 +2,6 @@ import { EventClass } from "../../structures/event.js";
 import "dotenv/config";
 import { AFK } from "../../database/modals/afk.js";
 import { EmbedBuilder } from "discord.js";
-// import { EmbedBuilder } from "discord.js";
 
 export default new EventClass({
   name: "messageCreate",
@@ -22,7 +21,9 @@ export default new EventClass({
             ]
         });
 
-        await AFK.findOneAndUpdate({ id: message.author.id }, { afk: false, mentions: 0 });
+        await AFK.findOneAndUpdate({ id: message.author.id }, { afk: false, mentions: 0 })
+        await AFK.findOneAndRemove({ id: message.author.id })
+        
     }
 
     message.mentions.users.filter(u => !u.bot && u.id !== message.author.id).forEach(async user => {
