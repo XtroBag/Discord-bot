@@ -37,7 +37,7 @@ export default new CommandClass({
     const UserFlags = (await normalUser.fetchFlags(true)).toArray();
 
     if (UserFlags.length === 0) {
-      badges.push(`No badges`);
+      badges.push(`None`|| 'None');
     }
 
     for (const flag of UserFlags) {
@@ -137,5 +137,6 @@ export default new CommandClass({
 
       interaction.reply({ embeds: [embed] });
     }
+    
   },
 });

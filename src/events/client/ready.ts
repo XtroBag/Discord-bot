@@ -29,9 +29,9 @@ export default new EventClass({
         status: "idle",
       },
       {
-        name: "Disabled Commands",
+        name: "Developer XtroBag#6105",
         type: ActivityType.Watching,
-        status: "dnd",
+        status: "idle",
       },
     ];
 

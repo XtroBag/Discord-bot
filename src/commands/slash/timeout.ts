@@ -48,15 +48,15 @@ export default new CommandClass({
     const reason = interaction.options.getString("reason");
 
     if (!user.moderatable || !user.manageable) {
-      return interaction.reply({
+      return await interaction.reply({
         content: "This user can not be modified by the bot!",
       });
     }
-
+  
     const length = ms(time);
 
     if (!length || length >  ms('28d')) {
-      return interaction.reply({ content: 'Time is invalid or is over 28 day limit'})
+      return await interaction.reply({ content: 'Time is invalid or is over 28 day limit'})
     } 
 
     await user.timeout(ms(time), reason).catch((err) => {
@@ -68,7 +68,7 @@ export default new CommandClass({
     .setDescription(`${user.user.username}'s been timed out until <t:${Math.round((Date.now() + length) / 1000)}:f>`)
     .setTimestamp()
 
-    interaction.reply({
+   await interaction.reply({
       embeds: [embed]
     });
   },

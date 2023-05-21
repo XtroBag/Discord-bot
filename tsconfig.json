@@ -32,6 +32,6 @@
 		"skipDefaultLibCheck": true,
 		"importHelpers": true
 	},
-	"include": ["src", "environment.d.ts"],
+	"include": ["src", "environment.d.ts", "config.ts"],
 	"exclude": ["node_modules"]
 }

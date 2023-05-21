@@ -6,7 +6,7 @@
   "types": "environment.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:prod": "node dist/index.js",
+    "start:prod": "node dist/src/index.js",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build": "tsc",
