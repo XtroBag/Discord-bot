@@ -12,7 +12,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "start": "npm run build && npm run start:prod",
-    "deploy": "npm run build && node dist/deploy-commands.js"
+    "deploy": "npm run build && node dist/src/deploy-commands.js"
   },
   "repository": {
     "type": "git",

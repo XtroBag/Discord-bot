@@ -14,14 +14,14 @@ import { Colors, Emojis } from "../../../config.js";
 export default new CommandClass({
   data: {
     name: "afk",
-    description: "Become AFK with the bot",
+    description: "Display yourself AFK if your not at you're device",
     type: ApplicationCommandType.ChatInput,
   },
   opt: {
     userPermissions: ["SendMessages"],
     botPermissions: ["SendMessages"],
     category: "slash",
-    cooldown: 5,
+    cooldown: 7,
     visible: true,
     guildOnly: false,
   },
@@ -63,6 +63,6 @@ export default new CommandClass({
       ],
     });
 
-    interaction.showModal(modal);
+    await interaction.showModal(modal);
   },
 });

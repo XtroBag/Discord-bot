@@ -2,13 +2,17 @@ import { inlineCode, Collection, bold, EmbedBuilder } from "discord.js";
 import { EventClass } from "../../structures/event.js";
 import { missingPerms } from "../../misc/util.js";
 import { AFK } from "../../database/modals/afk.js";
-import { Colors, Emojis } from "../../../config.js";
+import { Colors, Emojis, Config } from "../../../config.js";
 
 export default new EventClass({
   name: "interactionCreate",
   async execute(client, interaction) {
     if (interaction.isCommand()) {
       if (interaction.inCachedGuild()) {
+        if (Config.globallyDisabled === true) {
+          interaction.reply({ content: 'All commands are globally disabled currently, Try again later!'})
+      } else {
+
         const command = interaction.client.commands.get(
           interaction.commandName
         );
@@ -154,6 +158,8 @@ export default new EventClass({
             }
           }
         }
+      }
+
       }
     }
 

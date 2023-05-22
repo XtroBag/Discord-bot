@@ -9,7 +9,7 @@ import { CommandClass } from "../../structures/command.js";
 export default new CommandClass({
   data: {
     name: "user",
-    description: "Get information about a discord user",
+    description: "Find general information about a discord user",
     options: [
       {
         name: "member",

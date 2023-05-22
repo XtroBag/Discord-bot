@@ -4,7 +4,7 @@ import { CommandClass } from '../../structures/command.js';
 export default new CommandClass({
     data: {
         name: 'ping',
-        description: 'Pong!',
+        description: 'Pong! Test the bots ping',
         type: ApplicationCommandType.ChatInput,
     },
     opt: {

@@ -1,3 +1,8 @@
+export const Config =  {
+  ownerID: '929830815699984475',
+  globallyDisabled: false
+} 
+
 export enum Colors {
   Error = "#FF0000",
   Success = "#008000",
