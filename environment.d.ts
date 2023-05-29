@@ -8,6 +8,7 @@ declare global {
             CLIENT_ID: string;
             GUILD_ID: string;
             URI: string;
+            OPENAI_API_KEY: string;
         }
     }
 }
