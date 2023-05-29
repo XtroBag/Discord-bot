@@ -4,7 +4,8 @@ import { AFK } from "../../database/modals/afk.js";
 import { EmbedBuilder } from "discord.js";
 import { Colors, Emojis } from "../../../config.js";
 import { Guild } from "../../database/modals/guild.js";
-import axios from 'axios';
+import { Config } from "../../../config.js";
+import axios from "axios";
 
 export default new EventClass({
   name: "messageCreate",
@@ -12,6 +13,49 @@ export default new EventClass({
   // @ts-ignore
   async execute(client, message) {
     if (!message.guild || message.author.bot) return;
+
+    // message commands execution code
+    if (Config.globallyDisabled === true) {
+      message.reply({
+        content:
+          "All commands are globally disabled currently, Try again later!",
+        flags: "SuppressNotifications",
+      });
+    } else {
+      if (!message.content.startsWith(Config.prefix)) return;
+
+      const args = message.content
+        .slice(Config.prefix.length)
+        .trim()
+        .split(/ +/g);
+
+      const command = args.shift().toLowerCase();
+
+      const commandFile = client.message.get(command);
+
+      if (!commandFile) {
+        return message.reply({
+          content: "This command doesn't exist",
+          flags: "SuppressNotifications",
+        });
+      }
+
+      if (commandFile.data.ownerOnly && Config.ownerID !== message.author.id) {
+        return message.reply({
+          content: "Sorry, this command can only be used by the bot owner.",
+          flags: "SuppressNotifications",
+        });
+      }
+
+      try {
+        commandFile.run(client, message, args);
+      } catch (error) {
+        console.log(error);
+        return message.channel.send("Something went wrong!");
+      }
+    }
+
+    // ending here
 
     const authorData = await AFK.findOne({
       afk: true,
@@ -79,28 +123,37 @@ export default new EventClass({
         await AFK.findOneAndUpdate({ id: user.id }, { $inc: { mentions: 1 } });
       });
 
+    // FIX THIS SYSTEM BECAUSE THIS CHATBOT API DOESNT WORK AND NEEDS MONEY CHANGE FOR ANOTHER ONE
+    const channel = await Guild.findOne({
+      guildName: message.guild.name,
+      id: message.guild.id,
+    });
 
-      // FIX THIS SYSTEM BECAUSE THIS CHATBOT API DOESNT WORK AND NEEDS MONEY CHANGE FOR ANOTHER ONE
-      const channel = await Guild.findOne({ guildName: message.guild.name, id: message.guild.id });
-      const { discussion: msg } = channel;
+    if (!channel) return;
 
-      if (message.channel.id === msg.channel) {
-        const client = axios.create({
-          headers: {
-            Authorization: "Bearer " + process.env.OPENAI_API_KEY
-          }
-        })
+    const { discussion: msg } = channel;
 
-        const params = {
-          prompt: message.content,
-          model: "text-davinci-003",
-          max_tokens: 2048,
-          temperature: 0.5
-        }
+    if (message.channel.id === msg.channel) {
+      const client = axios.create({
+        headers: {
+          Authorization: "Bearer " + process.env.OPENAI_API_KEY,
+        },
+      });
 
-      const response = await client.post("https://api.openai.com/v1/chat/completions", params)
-        message.reply({ content: `${response.data.choices[0].text}`}).catch(() => {})
-      }
+      const params = {
+        prompt: message.content,
+        model: "text-davinci-003",
+        max_tokens: 2048,
+        temperature: 0.5,
+      };
 
+      const response = await client.post(
+        "https://api.openai.com/v1/chat/completions",
+        params
+      );
+      message
+        .reply({ content: `${response.data.choices[0].text}` })
+        .catch(() => {});
+    }
   },
 });

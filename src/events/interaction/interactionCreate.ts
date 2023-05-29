@@ -1,6 +1,6 @@
 import { inlineCode, Collection, bold, EmbedBuilder } from "discord.js";
 import { EventClass } from "../../structures/event.js";
-import { missingPerms } from "../../misc/util.js";
+import { missingPerms } from "../../functions/util.js";
 import { AFK } from "../../database/modals/afk.js";
 import { Colors, Emojis, Config } from "../../../config.js";
 import { Guild } from "../../database/modals/guild.js";
@@ -16,7 +16,7 @@ export default new EventClass({
               "All commands are globally disabled currently, Try again later!",
           });
         } else {
-          const command = interaction.client.commands.get(
+          const command = interaction.client.slash.get(
             interaction.commandName
           );
 

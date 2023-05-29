@@ -2,6 +2,7 @@ import { EventClass } from "../../structures/event.js";
 import { connect } from "mongoose";
 import "dotenv/config";
 import { ActivityType, PresenceStatusData } from "discord.js";
+import { Config } from "../../../config.js";
 
 export default new EventClass({
   name: "ready",
@@ -17,23 +18,29 @@ export default new EventClass({
         | ActivityType.Competing;
       status: PresenceStatusData;
     };
-    const options: OptionsEntry[] = [
+
+    let options: OptionsEntry[] = [
       {
-        name: "Coded in typescript",
+        name: "Coded in TypeScript",
         type: ActivityType.Watching,
         status: "online",
       },
       {
-        name: "Enjoying Development",
-        type: ActivityType.Watching,
-        status: "idle",
-      },
-      {
-        name: "Developer XtroBag#6105",
+        name: "Developer XtroBag",
         type: ActivityType.Watching,
         status: "idle",
       },
     ];
+
+    if (Config.globallyDisabled === true) {
+      options = [
+        {
+          name: "All Disabled Commands",
+          type: ActivityType.Watching,
+          status: "dnd",
+        },
+      ];
+    }
 
     let i = 0;
     setInterval(() => {
@@ -48,7 +55,7 @@ export default new EventClass({
       });
 
       i++;
-    }, 7000);
+    }, 6000);
 
     //--------------------------------------------------
 

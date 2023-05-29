@@ -1,5 +1,6 @@
 import { Collection } from 'discord.js';
 import { CommandClass } from './src/structures/command.js';
+import { MessageClass } from './src/structures/message.ts';
 
 declare global {
     namespace NodeJS {
@@ -15,8 +16,9 @@ declare global {
 
 declare module 'discord.js' {
     interface Client {
-        commands: Collection<string, CommandClass>;
+        slash: Collection<string, CommandClass>;
         cooldown: Collection<string, Collection<string, number>>;
+        message: Collection<string, MessageClass>
     }
 }
 
