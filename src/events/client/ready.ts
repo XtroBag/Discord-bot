@@ -35,7 +35,7 @@ export default new EventClass({
     if (Config.globallyDisabled === true) {
       options = [
         {
-          name: "All Disabled Commands",
+          name: "All Disabled Cmds",
           type: ActivityType.Watching,
           status: "dnd",
         },
