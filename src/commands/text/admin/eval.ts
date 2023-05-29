@@ -1,11 +1,12 @@
 import { EmbedBuilder, codeBlock } from "discord.js";
-import { MessageClass } from "../../structures/message.js";
+import { TextClass } from "../../../structures/text.js";
 import { inspect } from "util";
 
-export default new MessageClass({
+export default new TextClass({
   data: {
     name: "eval",
     description: "Run code in chat",
+    usage: "?icy eval <code>",
     ownerOnly: true,
   },
   // @ts-ignore
@@ -19,7 +20,7 @@ export default new MessageClass({
         output = inspect(data);
       }
       embed.setTitle("Code Executed");
-      embed.setDescription(codeBlock(output));
+      embed.setDescription(codeBlock('js', output));
       await msg.edit({ embeds: [embed] });
     } catch (e) {
       embed.setTitle("An Error has occured");

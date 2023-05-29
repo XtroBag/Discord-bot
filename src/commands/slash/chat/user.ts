@@ -4,7 +4,7 @@ import {
   ChatInputCommandInteraction,
   EmbedBuilder,
 } from "discord.js";
-import { CommandClass } from "../../structures/command.js";
+import { CommandClass } from "../../../structures/command.js";
 
 export default new CommandClass({
   data: {

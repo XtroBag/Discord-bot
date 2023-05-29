@@ -6,12 +6,13 @@ interface CommandOptions {
     data: {
         name: string,
         description: string,
-        ownerOnly: boolean
+        usage: string;
+        ownerOnly: boolean;
     };
     run: (client?: ExtendedClient, message?: Message, args?: any) => Promise<any>;
 };
 
-export class MessageClass {
+export class TextClass {
     data: CommandOptions['data'];
     run?: CommandOptions['run'];
 

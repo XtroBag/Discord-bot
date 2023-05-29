@@ -7,8 +7,8 @@ import {
   ChannelType,
   EmbedBuilder,
 } from "discord.js";
-import { CommandClass } from "../../structures/command.js";
-import { Colors, Emojis } from "../../../config.js";
+import { CommandClass } from "../../../structures/command.js";
+import { Colors, Emojis } from "../../../../config.js";
 
 export default new CommandClass({
   data: {

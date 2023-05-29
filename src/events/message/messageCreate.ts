@@ -32,7 +32,7 @@ export default new EventClass({
 
       const command = args.shift().toLowerCase();
 
-      const commandFile = client.message.get(command);
+      const commandFile = client.text.get(command);
 
       if (!commandFile) {
         return message.reply({

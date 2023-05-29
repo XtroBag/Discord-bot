@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { client } from '../index.js';
-import { MessageClass } from './message.js';
+import { TextClass } from './text.js';
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
 
@@ -30,13 +30,13 @@ export class ExtendedClient extends Client {
         });
         this.slash = new Collection<string, CommandClass>();
         this.cooldown = new Collection<string, Collection<string, number>>();
-        this.message = new Collection<string, MessageClass>()
+        this.text = new Collection<string, TextClass>()
     };
     
     private async loadModules() {
 
         //Commands
-        const commandFolderPath = fileURLToPath(new URL('../slash', import.meta.url));
+        const commandFolderPath = fileURLToPath(new URL('../commands/slash', import.meta.url));
         const commandFolders = fs.readdirSync(commandFolderPath);
 
         for (const folder of commandFolders) {
@@ -78,7 +78,7 @@ export class ExtendedClient extends Client {
             }
         }
 
-        const messageFolderPath = fileURLToPath(new URL('../message', import.meta.url));
+        const messageFolderPath = fileURLToPath(new URL('../commands/text', import.meta.url));
         const messageFolders = fs.readdirSync(messageFolderPath);
 
         for (const folder of messageFolders) {
@@ -87,10 +87,10 @@ export class ExtendedClient extends Client {
             for (const file of commandFiles) {
                 const filePath = path.join(messagePath, file)
 
-                const command = await dynamicImport(filePath) as MessageClass;
+                const command = await dynamicImport(filePath) as TextClass;
                 // Set a new item in the Collection with the key as the command name and the value as the exported module
                 if ('data' in command && 'run' in command) {
-                    this.message.set(command.data.name, command);
+                    this.text.set(command.data.name, command);
                 } else {
                     console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "run" property.`);
                 };

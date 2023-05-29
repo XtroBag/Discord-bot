@@ -7,9 +7,9 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { CommandClass } from "../../structures/command.js";
-import { AFK } from "../../database/modals/afk.js";
-import { Colors, Emojis } from "../../../config.js";
+import { CommandClass } from "../../../structures/command.js";
+import { AFK } from "../../../database/modals/afk.js";
+import { Colors, Emojis } from "../../../../config.js";
 
 export default new CommandClass({
   data: {

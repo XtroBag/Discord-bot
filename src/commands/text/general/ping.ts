@@ -1,9 +1,10 @@
-import { MessageClass } from "../../structures/message.js";
+import { TextClass } from "../../../structures/text.js";
 
-export default new MessageClass({
+export default new TextClass({
     data: {
         name: 'ping',
         description: 'use the ping command',
+        usage: "",
         ownerOnly: false
     },
     // @ts-ignore
