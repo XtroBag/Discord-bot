@@ -13,7 +13,6 @@ export default new EventClass({
   // @ts-ignore
   async execute(client, message) {
     if (!message.guild || message.author.bot) return;
-
     // message commands execution code
     if (!message.content.startsWith(Config.prefix)) return;
     if (Config.globallyDisabled === true) {

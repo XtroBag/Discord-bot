@@ -1,5 +1,5 @@
 import { Collection } from 'discord.js';
-import { CommandClass } from './src/structures/command.js';
+import { CommandClass } from './src/structures/slash.ts';
 import { TextClass } from './src/structures/text.ts';
 
 declare global {

@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, Collection, ClientEvents } from 'discord.js';
 
 import { EventClass } from './event.js';
-import { CommandClass } from './command.js';
+import { CommandClass } from './slash.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';

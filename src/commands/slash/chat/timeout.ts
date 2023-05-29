@@ -5,7 +5,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import ms from "ms";
-import { CommandClass } from "../../../structures/command.js";
+import { CommandClass } from "../../../structures/slash.js";
 
 export default new CommandClass({
   data: {

@@ -1,5 +1,5 @@
 import { REST, Routes } from 'discord.js';
-import type { CommandClass } from './structures/command.js';
+import type { CommandClass } from './structures/slash.js';
 import 'dotenv/config';
 
 import fs from 'node:fs';

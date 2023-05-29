@@ -1,5 +1,5 @@
 import { ApplicationCommandType, ChatInputCommandInteraction, inlineCode } from 'discord.js';
-import { CommandClass } from '../../../structures/command.js';
+import { CommandClass } from '../../../structures/slash.js';
 
 export default new CommandClass({
     data: {

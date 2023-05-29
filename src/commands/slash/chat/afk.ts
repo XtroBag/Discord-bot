@@ -7,7 +7,7 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { CommandClass } from "../../../structures/command.js";
+import { CommandClass } from "../../../structures/slash.js";
 import { AFK } from "../../../database/modals/afk.js";
 import { Colors, Emojis } from "../../../../config.js";
 
