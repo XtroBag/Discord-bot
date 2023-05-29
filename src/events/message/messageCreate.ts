@@ -15,8 +15,9 @@ export default new EventClass({
     if (!message.guild || message.author.bot) return;
 
     // message commands execution code
+    if (!message.content.startsWith(Config.prefix)) return;
     if (Config.globallyDisabled === true) {
-      message.reply({
+     return message.reply({
         content:
           "All commands are globally disabled currently, Try again later!",
         flags: "SuppressNotifications",
