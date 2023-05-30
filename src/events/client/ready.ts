@@ -3,6 +3,7 @@ import { connect } from "mongoose";
 import "dotenv/config";
 import { ActivityType, PresenceStatusData } from "discord.js";
 import { Config } from "../../../config.js";
+import chalk from "chalk";
 
 export default new EventClass({
   name: "ready",
@@ -59,10 +60,20 @@ export default new EventClass({
 
     //--------------------------------------------------
 
-    console.log(`logged in as ${client.user.username}`);
+    console.log(
+      chalk.green(`Successfully`) +
+        chalk.white(` logged in as `) +
+        chalk.blue(`${client.user.tag}`)
+    );
 
     connect(process.env.URI)
-      .then(() => console.log("Successfully connected to MongoDB!"))
+      .then(() =>
+        console.log(
+          chalk.green(`Successfully`) +
+            chalk.white(" connected to ") +
+            chalk.yellow("MongoDB!")
+        )
+      )
       .catch((e) => console.log(e));
   },
 });
