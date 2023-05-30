@@ -6,11 +6,6 @@ import {
 } from "discord.js";
 import { TextClass } from "../../../structures/text.js";
 
-// NOTES:
-// Need to currently fix so if another select menu is ran it will not throw errors too console and have it start working on using the next menu if selected by user
-// CODE CURRENTLY THROWS ERRORS NEED TESTING
-// "Unknown Interaction" prob coming from the collector thinking the wrong object is inside
-
 export default new TextClass({
   data: {
     name: "help",
@@ -20,10 +15,11 @@ export default new TextClass({
   },
   // @ts-ignore
   async run(client, message, args) {
+    console.log("command run");
     const emojis = {
       general: "🧶",
       owner: "🪶",
-      fun: "🪅",
+      fun: "🎈",
     };
 
     const directories = [
@@ -56,7 +52,7 @@ export default new TextClass({
     const components = (state: boolean) => [
       new ActionRowBuilder<StringSelectMenuBuilder>().addComponents([
         new StringSelectMenuBuilder()
-          .setCustomId("help_menu")
+          .setCustomId('custom')
           .setPlaceholder("Please Select a category")
           .setDisabled(state)
           .addOptions(
@@ -72,55 +68,69 @@ export default new TextClass({
       ]),
     ];
 
-    const initialMessage = await message.reply({
-      embeds: [embed],
-      components: components(false),
-    });
+    const initialMessage = await message
+      .reply({
+        embeds: [embed],
+        components: components(false),
+      })
+      .catch((err) => {
+        console.log(err);
+      }); // error is being logged from here in the file - PROBLEM
 
-    const filter = (interaction) =>
-      interaction.isStringSelectMenu() &&
-      interaction.user.id === message.author.id;
+    if (!initialMessage) return;
 
-    const collector = message.channel.createMessageComponentCollector({
-      componentType: ComponentType.StringSelect,
-      filter: filter,
-      time: 30000, // take this off if don't want time on collector
-    });
+    const filter = (interaction) => interaction.isStringSelectMenu();
 
-    collector.on("collect", (message) => {
-      const [directory] = message.values;
-      const category = categories.find(
-        (x) => x.directory.toLowerCase() === directory
+    const collector =
+      initialMessage.createMessageComponentCollector<ComponentType.StringSelect>(
+        {
+          componentType: ComponentType.StringSelect,
+          filter: filter,
+          time: 30000,
+        }
       );
 
-      const categoryEmbed = new EmbedBuilder()
-        .setTitle(`${formatString(directory)} commands`)
-        .setDescription(
-          `A list of all the commands categorized under ${directory}`
-        )
-        .addFields(
-          category.commands.map((cmd) => {
-            return {
-              name: `\`${cmd.name}\``,
-              value: `${cmd.description}`,
-              inline: true,
-            };
-          })
+    collector.on("collect", async (msg) => {
+      if (msg.user.id !== message.author.id) {
+        await message.channel.send({
+          content: `<@${msg.user.id}>, You cannot use this interaction!`,
+        });
+      } else {
+        const [directory] = msg.values;
+        const category = categories.find(
+          (x) => x.directory.toLowerCase() === directory
         );
 
-      message.update({ embeds: [categoryEmbed],  });
+        const categoryEmbed = new EmbedBuilder()
+          .setTitle(`${formatString(directory)} commands`)
+          .setDescription(
+            `A list of all the commands categorized under ${directory}`
+          )
+          .addFields(
+            category.commands.map((cmd) => {
+              return {
+                name: `\`${cmd.name}\``,
+                value: `${cmd.description}`,
+                inline: true,
+              };
+            })
+          );
+
+        msg.update({ embeds: [categoryEmbed] });
+      }
     });
 
-    collector.on("end", () => {
-      initialMessage.edit({ components: components(true) })
-      // MAKE IT SO THE MESSAGE CAN BE DELETED AFTER SOME TIME CURRENTLY NEEDS FIXING WHEN IF USER DELETED THE EMBED RESPONSE AND THEN BOT TRIES TO DELETE THROWS "Unkown Message" ERROR
-      // .then((msg) => {
-      //   setTimeout(async () => {
-      //     if (msg.deletable) {
-      //       await msg.delete().catch(() => {});
-      //     }
-      //   }, 7000);
-      // });
+    // @ts-ignore
+    collector.on("end", (i, event) => {
+      if (event !== "messageDelete") {
+        initialMessage.edit({ components: components(true) }).then((msg) => {
+          setTimeout(async () => {
+            if (msg.deletable) {
+              await msg.delete().catch(() => {});
+            }
+          }, 7000);
+        });
+      }
     });
   },
 });

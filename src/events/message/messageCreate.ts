@@ -13,49 +13,7 @@ export default new EventClass({
   // @ts-ignore
   async execute(client, message) {
     if (!message.guild || message.author.bot) return;
-    // message commands execution code
-    if (!message.content.startsWith(Config.prefix)) return;
-    if (Config.globallyDisabled === true) {
-     return message.reply({
-        content:
-          "All commands are globally disabled currently, Try again later!",
-        flags: "SuppressNotifications",
-      });
-    } else {
-      if (!message.content.startsWith(Config.prefix)) return;
 
-      const args = message.content
-        .slice(Config.prefix.length)
-        .trim()
-        .split(/ +/g);
-
-      const command = args.shift().toLowerCase();
-
-      const commandFile = client.text.get(command);
-
-      if (!commandFile) {
-        return message.reply({
-          content: "This command doesn't exist",
-          flags: "SuppressNotifications",
-        });
-      }
-
-      if (commandFile.data.ownerOnly && Config.ownerID !== message.author.id) {
-        return message.reply({
-          content: "Sorry, this command can only be used by the bot owner.",
-          flags: "SuppressNotifications",
-        });
-      }
-
-      try {
-        commandFile.run(client, message, args);
-      } catch (error) {
-        console.log(error);
-        return message.channel.send("Something went wrong!");
-      }
-    }
-
-    // ending here
 
     const authorData = await AFK.findOne({
       afk: true,
@@ -122,6 +80,52 @@ export default new EventClass({
 
         await AFK.findOneAndUpdate({ id: user.id }, { $inc: { mentions: 1 } });
       });
+
+
+    // message commands execution code
+    if (!message.content.startsWith(Config.prefix)) return;
+    if (Config.globallyDisabled === true) {
+     return message.reply({
+        content:
+          "All commands are globally disabled currently, Try again later!",
+        flags: "SuppressNotifications",
+      });
+    } else {
+      if (!message.content.startsWith(Config.prefix)) return;
+
+      const args = message.content
+        .slice(Config.prefix.length)
+        .trim()
+        .split(/ +/g);
+
+      const command = args.shift().toLowerCase();
+
+      const commandFile = client.text.get(command);
+
+      if (!commandFile) {
+        return message.reply({
+          content: "This command doesn't exist",
+          flags: "SuppressNotifications",
+        });
+      }
+
+      if (commandFile.data.ownerOnly && Config.ownerID !== message.author.id) {
+        return message.reply({
+          content: "Sorry, this command can only be used by the bot owner.",
+          flags: "SuppressNotifications",
+        });
+      }
+
+      try {
+        commandFile.run(client, message, args);
+      } catch (error) {
+        console.log(error);
+        return message.channel.send("Something went wrong!");
+      }
+    }
+
+    // ending here
+
 
     // FIX THIS SYSTEM BECAUSE THIS CHATBOT API DOESNT WORK AND NEEDS MONEY CHANGE FOR ANOTHER ONE
     const channel = await Guild.findOne({
