@@ -12,6 +12,11 @@ export default new TextClass({
   // @ts-ignore
   async run(client, message, args) {
     if (!args[0]) return message.reply({ content: "Please provide some code" })
+
+    if (args[0].includes('process.env.token')) {
+      return message.reply({ content: "Stop trying to access the token" })
+    }
+
     const embed = new EmbedBuilder().setTitle("Evaluating...");
     const msg = await message.reply({ embeds: [embed] });
     try {
