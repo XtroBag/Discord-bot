@@ -15,7 +15,9 @@ export default new TextClass({
   },
   // @ts-ignore
   async run(client, message, args) {
-    console.log("command run");
+
+    // Maybe add a feature to check if too many commands are listed on the embed and *MAYBE* make embed pages for each category
+
     const emojis = {
       general: "🧶",
       owner: "🪶",
