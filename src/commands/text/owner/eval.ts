@@ -11,6 +11,7 @@ export default new TextClass({
   },
   // @ts-ignore
   async run(client, message, args) {
+    if (!args[0]) return message.reply({ content: "Please provide some code" })
     const embed = new EmbedBuilder().setTitle("Evaluating...");
     const msg = await message.reply({ embeds: [embed] });
     try {
