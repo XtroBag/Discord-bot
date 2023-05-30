@@ -14,6 +14,11 @@ export default new EventClass({
             discussion: {
               channel: 'None',
               set: false
+            },
+            logging: {
+              name: 'None',
+              channel: 'None',
+              active: false
             }
         }));
         console.log(`${guild.name} has been added too the guilds database!`)

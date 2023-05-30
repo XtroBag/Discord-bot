@@ -6,6 +6,12 @@ export interface Guild {
   discussion: {
     channel: string,
     set: boolean
+  },
+  logging: {
+    name: string,
+    channel: string,
+    active: boolean
+
   }
 }
 
@@ -18,8 +24,16 @@ export const Guild = model("Guild", new Schema<Guild>({
         default: "None"
       },
       set: Boolean
-      
+    },
+    logging: {
+      name: String,
+      channel: String,
+      active: {
+        type: Boolean,
+        default: "false"
+      }
     }
+  
     
   })
 );
