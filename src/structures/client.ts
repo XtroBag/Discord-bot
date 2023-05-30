@@ -46,6 +46,12 @@ export class ExtendedClient extends Client {
                 const filePath = path.join(commandPath, file)
 
                 const command = await dynamicImport(filePath) as CommandClass;
+
+                // this is a testing line for new system i'm trying
+                //@ts-ignore
+                const properties = { folder, ...command };
+
+
                 // Set a new item in the Collection with the key as the command name and the value as the exported module
                 if ('data' in command && 'execute' in command) {
                     this.slash.set(command.data.name, command);

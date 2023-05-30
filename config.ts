@@ -1,8 +1,8 @@
 export const Config = {
   ownerID: '929830815699984475',
   globallyDisabled: false,
-  prefix: '?icy'
-} 
+  prefix: 'icy'
+}
 
 export enum Colors {
   Error = "#FF0000",

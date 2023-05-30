@@ -6,8 +6,8 @@ export default new TextClass({
   data: {
     name: "eval",
     description: "Run code in chat",
-    usage: "?icy eval <code>",
     ownerOnly: true,
+    folder: 'owner'
   },
   // @ts-ignore
   async run(client, message, args) {

@@ -1,97 +1,126 @@
-// import { ColorResolvable, EmbedBuilder } from "discord.js";
-// import { Config } from "../../../../config.js";
+import {
+  ActionRowBuilder,
+  EmbedBuilder,
+  ComponentType,
+  StringSelectMenuBuilder,
+} from "discord.js";
 import { TextClass } from "../../../structures/text.js";
-import { readdir } from "fs/promises";
+
+// NOTES:
+// Need to currently fix so if another select menu is ran it will not throw errors too console and have it start working on using the next menu if selected by user
+// CODE CURRENTLY THROWS ERRORS NEED TESTING
+// "Unknown Interaction" prob coming from the collector thinking the wrong object is inside
 
 export default new TextClass({
   data: {
     name: "help",
-    description: "informaton about all text commands",
-    usage: "",
+    description: "informaton about commands",
     ownerOnly: false,
+    folder: "general",
   },
   // @ts-ignore
   async run(client, message, args) {
-    if (!args[0]) {
-    //   let categories = [];
+    const emojis = {
+      general: "🧶",
+      owner: "🪶",
+      fun: "🪅",
+    };
 
-      const directory = await readdir('../../dist/src/commands', { withFileTypes: true })
+    const directories = [
+      ...new Set(message.client.text.map((cmd) => cmd.data.folder)),
+    ];
 
-        for (const folder of directory) {
-            console.log(folder)
-        }
+    const formatString = (str) =>
+      `${str[0].toUpperCase()}${str.slice(1).toLowerCase()}`;
 
+    const categories = directories.map((dir) => {
+      const getCommands = message.client.text
+        .filter((cmd) => cmd.data.folder === dir)
+        .map((cmd) => {
+          return {
+            name: cmd.data.name,
+            description: cmd.data.description || "Command has no description",
+          };
+        });
 
-    //     const cmds = commands.map(async (command) => {
-    //       let file = await import(`../../commands/${dir}/${command}`).then((module) => module?.default); // if errors try adding "../" into the code directory search
+      return {
+        directory: formatString(dir),
+        commands: getCommands,
+      };
+    });
 
-    //       if (!file.data.name) return "No command name.";
+    const embed = new EmbedBuilder().setDescription(
+      "Please choose a category in the select menu"
+    );
 
-    //       let name = file.data.name.replace(".js", "");
+    const components = (state: boolean) => [
+      new ActionRowBuilder<StringSelectMenuBuilder>().addComponents([
+        new StringSelectMenuBuilder()
+          .setCustomId("help_menu")
+          .setPlaceholder("Please Select a category")
+          .setDisabled(state)
+          .addOptions(
+            categories.map((cmd) => {
+              return {
+                label: cmd.directory,
+                value: cmd.directory.toLowerCase(),
+                description: `Commands are from ${cmd.directory} category`,
+                emoji: emojis[cmd.directory.toLowerCase() || null],
+              };
+            })
+          ),
+      ]),
+    ];
 
-    //       return `\`${name}\``;
-    //     });
+    const initialMessage = await message.reply({
+      embeds: [embed],
+      components: components(false),
+    });
 
-    //     let data = new Object();
+    const filter = (interaction) =>
+      interaction.isStringSelectMenu() &&
+      interaction.user.id === message.author.id;
 
-    //     data = {
-    //       name: dir.toUpperCase(),
-    //       value: cmds.length === 0 ? "In progress." : cmds.join(" "),
-    //     };
+    const collector = message.channel.createMessageComponentCollector({
+      componentType: ComponentType.StringSelect,
+      filter: filter,
+      time: 30000, // take this off if don't want time on collector
+    });
 
-    //     categories.push(data);
-    //   });
+    collector.on("collect", (message) => {
+      const [directory] = message.values;
+      const category = categories.find(
+        (x) => x.directory.toLowerCase() === directory
+      );
 
-    //   const embed = new EmbedBuilder()
-    //     .setTitle("📬 Need help? Here are all of my commands:")
-    //     .addFields(categories)
-    //     .setDescription(
-    //       `Use \`${Config.prefix}help\` followed by a command name to get more additional information on a command. For example: \`${Config.prefix}help ping\`.`
-    //     )
-    //     .setFooter({ text: `Requested by ${message.author.tag}` })
-    //     .setTimestamp()
-    //     .setColor("Blurple");
-    //   return message.reply({ embeds: [embed] });
-    // } else {
-    //   const command = client.text.get(args[0].toLowerCase());
+      const categoryEmbed = new EmbedBuilder()
+        .setTitle(`${formatString(directory)} commands`)
+        .setDescription(
+          `A list of all the commands categorized under ${directory}`
+        )
+        .addFields(
+          category.commands.map((cmd) => {
+            return {
+              name: `\`${cmd.name}\``,
+              value: `${cmd.description}`,
+              inline: true,
+            };
+          })
+        );
 
-    //   if (!command) {
-    //     const embed = new EmbedBuilder()
-    //       .setTitle(
-    //         `Invalid command! Use \`${Config.prefix}help\` for all of my commands!`
-    //       )
-    //       .setColor("FF0000" as ColorResolvable);
-    //     return message.reply({ embeds: [embed] });
-    //   }
+      message.update({ embeds: [categoryEmbed],  });
+    });
 
-    //   const embed = new EmbedBuilder()
-    //     .setTitle("Command Details:")
-    //     .addFields([
-    //       { name: "PREFIX:", value: `\`${Config.prefix}\`` },
-    //       {
-    //         name: "COMMAND:",
-    //         value: command.data.name
-    //           ? `\`${command.data.name}\``
-    //           : "No name for this command.",
-    //       },
-    //       {
-    //         name: "USAGE:",
-    //         value: command.data.usage
-    //           ? `\`${Config.prefix}${command.data.name} ${command.data.usage}\``
-    //           : `\`${Config.prefix}${command.data.name}\``,
-    //       },
-    //       {
-    //         name: "DESCRIPTION:",
-    //         value: command.data.description
-    //           ? command.data.description
-    //           : "No description for this command.",
-    //       },
-    //     ])
-    //     .setFooter({ text: `Requested by ${message.author.tag}` })
-    //     .setTimestamp()
-    //     .setColor("Blurple");
-
-    //   return message.reply({ embeds: [embed] });
-     }
+    collector.on("end", () => {
+      initialMessage.edit({ components: components(true) })
+      // MAKE IT SO THE MESSAGE CAN BE DELETED AFTER SOME TIME CURRENTLY NEEDS FIXING WHEN IF USER DELETED THE EMBED RESPONSE AND THEN BOT TRIES TO DELETE THROWS "Unkown Message" ERROR
+      // .then((msg) => {
+      //   setTimeout(async () => {
+      //     if (msg.deletable) {
+      //       await msg.delete().catch(() => {});
+      //     }
+      //   }, 7000);
+      // });
+    });
   },
 });
