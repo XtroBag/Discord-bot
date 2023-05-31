@@ -5,6 +5,7 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import { CommandClass } from "../../../structures/slash.js";
+import { Badges, Emojis } from "../../../../config.js";
 
 export default new CommandClass({
   data: {
@@ -27,116 +28,173 @@ export default new CommandClass({
     visible: true,
     guildOnly: false,
   },
+  // @ts-ignore
   async execute(client, interaction: ChatInputCommandInteraction<"cached">) {
-    const user = interaction.options.getUser("member");
-    const normalUser = await client.users.fetch(user.id);
+    let user = interaction.options.getUser("member");
+    let member = interaction.guild.members.cache.get(user.id);
+    let flags = user.flags.toArray();
+    let badges = [];
 
-    const guildMember = interaction.options.getMember("member"); 
+    await Promise.all(
+      flags.map((badge) => {
+        switch (badge) {
+          case "Staff":
+            badges.push(Badges.Staff);
+            break;
+          case "Partner":
+            badges.push(Badges.PartneredServer);
+            break;
+          case "CertifiedModerator":
+            badges.push(Badges.ModeratorProgramsAlumni);
+            break;
+          case "Hypesquad":
+            badges.push(Badges.HypeSquadEvents);
+            break;
+          case "HypeSquadOnlineHouse1":
+            badges.push(Badges.HypeSquadBravery);
+            break;
+          case "HypeSquadOnlineHouse2":
+            badges.push(Badges.HypeSquadBrilliance);
+            break;
+          case "HypeSquadOnlineHouse3":
+            badges.push(Badges.HypeSquadBalance);
+            break;
+          case "BugHunterLevel1":
+            badges.push(Badges.BugHunter1);
+            break;
+          case "BugHunterLevel2":
+            badges.push(Badges.BugHunter2);
+            break;
+          case "ActiveDeveloper":
+            badges.push(Badges.ActiveDeveloper);
+            break;
+          case "VerifiedDeveloper":
+            badges.push(Badges.VerifiedDeveloper);
+            break;
+          case "PremiumEarlySupporter":
+            badges.push(Badges.EarlySupporter);
+            break;
+          case "VerifiedBot":
+            badges.push(Badges.VerifiedBot);
+        }
+      })
+    );
 
-    const badges = [];
-    const UserFlags = (await normalUser.fetchFlags(true)).toArray();
+    const userData = await fetch(
+      `https://japi.rest/discord/v1/user/${user.id}`
+    );
+    const { data } = await userData.json();
 
-    if (UserFlags.length === 0) {
-      badges.push(`None`|| 'None');
+    if (data.public_flags_array) {
+      await Promise.all(
+        data.public_flags_array.map(async (badge) => {
+          if (badge === "NITRO") badges.push(Badges.Nitro);
+        })
+      );
     }
 
-    for (const flag of UserFlags) {
-      switch (flag) {
-        case "HypeSquadOnlineHouse1": // Bravery
-          badges.push("<:HypesquadBravery:1054162269749125160>");
-          break;
-        case "HypeSquadOnlineHouse2": // Brilliance
-          badges.push("<:HypesquadBrilliance:1054162348224557166>");
-          break;
-        case "HypeSquadOnlineHouse3": // Balance
-          badges.push("<:HypesquadBalance:1054162268620869703>");
-          break;
-        case "VerifiedDeveloper": // Verified Developer
-          badges.push("<:VerifiedDeveloper:1054162267337404466>");
-          break;
-        case "PremiumEarlySupporter": // Early Supporter
-          badges.push("<:EarlySupporter:1054162266439823461>");
-          break;
-        case "Hypesquad": // Hype Squad
-          badges.push("<:HypeSquadEvents:1054162416721731664>");
-          break;
-        case "BugHunterLevel1": // Bug Hunter [1]
-          badges.push("<:BugHunter1:1054162263235379301>");
-          break;
-        case "BugHunterLevel2": // Bug Hunter [2]
-          badges.push("<:BugHunter2:1054162264321704116>");
-          break;
-        case "CertifiedModerator": // Certified Moderator
-          badges.push("<:CertifiedModerator:1054162265542230068>");
-          break;
-        case "Partner": // Partner
-          badges.push("<:PartneredServer:1054162574817624084>");
-          break;
-        case "Staff": // Discord Staff
-          badges.push("<:DiscordStaff:1054162480538067075>");
-          break;
-        case "ActiveDeveloper": // Active Developer
-          badges.push("<:ActiveDeveloper:1054162262300053608>");
-          break;
+    if (user.bot) {
+      const botFetch = await fetch(
+        `https://discord.com/api/v10/applications/${user.id}/rpc`
+      );
+
+      const json = await botFetch.json();
+
+      const flagsBot = json.flags;
+
+      const gateways = {
+        APPLICATION_COMMAND_BADGE: 1 << 23,
+        APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE: 1 << 6,
+      };
+
+      const arrayFlags = [];
+
+      for (let i in gateways) {
+        const bit = gateways[i];
+        if ((flagsBot & bit) === bit) arrayFlags.push(i);
+      }
+
+      if (arrayFlags.includes("APPLICATION_COMMAND_BADGE")) {
+        badges.push(Badges.SupportsCommands);
+      }
+
+      if (
+        arrayFlags.includes("APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE")
+      ) {
+        badges.push(Badges.Automod);
       }
     }
 
-    if (guildMember) {
+    if (
+      !user.discriminator ||
+      user.discriminator === "0" ||
+      user.tag === `${user.username}#0`
+    ) {
+      badges.push(Badges.Username);
+    }
+
+    if (member) {
+      console.log("User searched was inside the guild");
+
+      let bot;
+      if (member.user.bot) {
+        bot = Emojis.Check;
+      } else {
+        bot = Emojis.Cross;
+      }
+
       const embed = new EmbedBuilder()
-        .setTitle(`${guildMember.user.username}'s Profile`)
-        .setThumbnail(guildMember.displayAvatarURL({ extension: "png" }))
+        .setTitle(`${member.user.username}'s Profile`)
+        .setThumbnail(member.displayAvatarURL({ extension: "png" }))
         .addFields([
           {
             name: "General:",
             value:
-              "\n<:Username:1108186381215334510> Username:" +
-              ` \`\`${guildMember.user.username}\`\`` +
-              "\n<:Nickname:1108186707947438203> Nickname:" +
-              ` **${
-                guildMember.nickname ?? " None"
-              }**\n <:Blank:1069053209605308496>\` Active ›\` ${
-                guildMember.nickname
-                  ? `<:Check:1107897716157206568>`
-                  : "<:Cross:1107897755017420871>"
-              }` +
-              "\n<:Discriminator:1108187095861825546> Discriminator:" +
-              ` \`\`#${guildMember.user.discriminator}\`\`` +
-              "\n<:Streaming:1108194225851465788> Streaming:" +
+              "\nUsername:" +
+              ` \`\`${member.user.username}\`\`` +
+              "\nNickname:" +
+              ` \`\`${member.nickname ?? "None"}\`\`` +
+              "\nBadges:" +
+              `${badges.join(" ") || " \`\`None\`\`"}` +
+              "\nDiscriminator:" +
+              ` \`\`#${member.user.discriminator}\`\`` +
+              "\nStreaming:" +
               `${
-                guildMember.presence?.activities.filter(
+                member.presence?.activities.filter(
                   (item) => item.name === "YouTube" || item.name === "Twitch"
                 ).length > 0
-                  ? guildMember.presence?.activities
+                  ? member.presence?.activities
                       .filter(
                         (item) =>
                           item.name === "YouTube" || item.name === "Twitch"
                       )
                       .map((activity) => {
                         if (activity.type === ActivityType.Streaming) {
-                          return ` \`\`Online\`\``;
+                          return ` ${Emojis.Check}`;
                         }
                       })
-                  : " ``Offline``"
+                  : ` ${Emojis.Cross}`
               }` +
-              "\n<:Badges:1108202721904955422> Badges:" +
-              `${badges.join(" ")}`,
+              "\nBot:" +
+              ` ${bot}`,
           },
         ])
         .setColor("#2F3136")
         .setFooter({
-          text: `${guildMember.user.tag} `,
-          iconURL: guildMember.user.avatarURL({ extension: "png" }),
+          text: `${member.user.tag} `,
+          iconURL: member.user.avatarURL({ extension: "png" }),
         })
         .setTimestamp();
 
       interaction.reply({ embeds: [embed] });
-    } else if (normalUser) {
+    } else {
+      // other embed
       const embed = new EmbedBuilder()
-        .setTitle(`${normalUser.username}'s Profile`)
-        .setFooter({ text: "User is not in this server" });
+        .setTitle(`${user.username}'s Profile`)
+        .setDescription("Badges: " + `${badges.join(" ") || " \`\`None\`\`"}`);
+      console.log("User searched was not inside the guild");
 
       interaction.reply({ embeds: [embed] });
     }
-    
   },
 });
