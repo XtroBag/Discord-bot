@@ -1,5 +1,6 @@
 import { EventClass } from "../../structures/event.js";
 import { Guild } from "../../database/modals/guild.js";
+import chalk from 'chalk';
 import "dotenv/config";
 
 export default new EventClass({
@@ -21,6 +22,6 @@ export default new EventClass({
               active: false
             }
         }));
-        console.log(`${guild.name} has been added too the guilds database!`)
+        console.log(chalk.green(`Successfully`) + chalk.white(` Added ${guild.name} too the guilds database!`))
   },
 });

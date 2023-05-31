@@ -1,5 +1,6 @@
 import { EventClass } from "../../structures/event.js";
 import { Guild } from "../../database/modals/guild.js";
+import chalk from 'chalk'
 import "dotenv/config";
 
 export default new EventClass({
@@ -13,11 +14,11 @@ export default new EventClass({
     server
       .deleteOne({ id: guild.id })
       .then(() => {
-        console.log("Removed a guild from database! Guild: " + guild.name);
+        console.log(chalk.yellow("Removed") + chalk.white(` A guild from database! Guild: ${guild.name}`));
       })
       .catch((err) => {
         console.log(
-          `Critical Error! Failed to remove Guild "${guild.name}" from the database! Error: ${err}`
+          chalk.red(`Error`) + chalk.white(`Failed to remove "${guild.name}" from the database!`) + `Error: ${err}`
         );
       });
   },

@@ -62,16 +62,14 @@ export default new EventClass({
 
     console.log(
       chalk.green(`Successfully`) +
-        chalk.white(` logged in as `) +
-        chalk.blue(`${client.user.tag}`)
+        chalk.white(` Logged in as ${client.user.tag}`)
     );
 
     connect(process.env.URI)
       .then(() =>
         console.log(
           chalk.green(`Successfully`) +
-            chalk.white(" connected to ") +
-            chalk.yellow("MongoDB!")
+            chalk.white(" Connected to MongoDB!")
         )
       )
       .catch((e) => console.log(e));
