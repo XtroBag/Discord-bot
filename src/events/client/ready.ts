@@ -27,7 +27,7 @@ export default new EventClass({
         status: "online",
       },
       {
-        name: "Developer XtroBag",
+        name: "XtroBag",
         type: ActivityType.Watching,
         status: "idle",
       },

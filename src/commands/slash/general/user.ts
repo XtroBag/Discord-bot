@@ -74,8 +74,9 @@ export default new CommandClass({
           case "PremiumEarlySupporter":
             badges.push(Badges.EarlySupporter);
             break;
-          case "VerifiedBot":
-            badges.push(Badges.VerifiedBot);
+          // case "VerifiedBot":
+          //   badges.push(Badges.VerifiedBot);
+          //   break;
         }
       })
     );
@@ -143,6 +144,20 @@ export default new CommandClass({
         bot = Emojis.Cross;
       }
 
+      let status = {
+        online: "Online",
+        idle: "Idle",
+        dnd: "Do Not Disturb",
+        offline: "Invisible",
+      };
+
+      let mode = {
+        online: Emojis.Online,
+        idle: Emojis.Idle,
+        dnd: Emojis.Dnd,
+        offline: Emojis.Offline,
+      };
+
       const embed = new EmbedBuilder()
         .setTitle(`${member.user.username}'s Profile`)
         .setThumbnail(member.displayAvatarURL({ extension: "png" }))
@@ -155,9 +170,14 @@ export default new CommandClass({
               "\nNickname:" +
               ` \`\`${member.nickname ?? "None"}\`\`` +
               "\nBadges:" +
-              `${badges.join(" ") || " \`\`None\`\`"}` +
+              ` ${badges.join(" ") || " ``None``"}` + 
+              "\nID:" + 
+              ` \`\`${member.id}\`\`` +
               "\nDiscriminator:" +
               ` \`\`#${member.user.discriminator}\`\`` +
+              "\nStatus:" +
+              ` ${mode[member.presence?.status ?? "offline"]} 
+                ${status[member.presence?.status ?? "offline"]}` +
               "\nStreaming:" +
               `${
                 member.presence?.activities.filter(
@@ -191,7 +211,7 @@ export default new CommandClass({
       // other embed
       const embed = new EmbedBuilder()
         .setTitle(`${user.username}'s Profile`)
-        .setDescription("Badges: " + `${badges.join(" ") || " \`\`None\`\`"}`);
+        .setDescription("Badges: " + `${badges.join(" ") || " ``None``"}`);
       console.log("User searched was not inside the guild");
 
       interaction.reply({ embeds: [embed] });
