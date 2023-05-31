@@ -22,8 +22,8 @@ export default new EventClass({
 
     let options: OptionsEntry[] = [
       {
-        name: "Coded in TypeScript",
-        type: ActivityType.Watching,
+        name: "TypeScript",
+        type: ActivityType.Listening,
         status: "online",
       },
       {

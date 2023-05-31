@@ -5,9 +5,9 @@ import {
   EmbedBuilder,
 } from "discord.js";
 import ms from "ms";
-import { CommandClass } from "../../../structures/slash.js";
+import { SlashClass } from "../../../structures/slash.js";
 
-export default new CommandClass({
+export default new SlashClass({
   data: {
     name: "timeout",
     description: "Timeout a user inside this guild",

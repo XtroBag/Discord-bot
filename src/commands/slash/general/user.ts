@@ -3,18 +3,19 @@ import {
   ApplicationCommandOptionType,
   ChatInputCommandInteraction,
   EmbedBuilder,
+  codeBlock,
 } from "discord.js";
-import { CommandClass } from "../../../structures/slash.js";
+import { SlashClass } from "../../../structures/slash.js";
 import { Badges, Emojis } from "../../../../config.js";
 
-export default new CommandClass({
+export default new SlashClass({
   data: {
     name: "user",
     description: "Find general information about a discord user",
     options: [
       {
-        name: "member",
-        description: "The member to search",
+        name: "user",
+        description: "The discord user to search",
         type: ApplicationCommandOptionType.User,
         required: true,
       },
@@ -176,8 +177,7 @@ export default new CommandClass({
               "\nDiscriminator:" +
               ` \`\`#${member.user.discriminator}\`\`` +
               "\nStatus:" +
-              ` ${mode[member.presence?.status ?? "offline"]} 
-                ${status[member.presence?.status ?? "offline"]}` +
+              ` ${mode[member.presence?.status ?? "offline"]} ${status[member.presence?.status ?? "offline"]}` +
               "\nStreaming:" +
               `${
                 member.presence?.activities.filter(
@@ -197,7 +197,26 @@ export default new CommandClass({
               }` +
               "\nBot:" +
               ` ${bot}`,
+          }, {
+            name: 'Server:',
+            value: "Owner:" + ` ${member.guild.ownerId === member.id ? Emojis.Check : Emojis.Cross}` + 
+            "" + ``
+          }, {
+            name: 'Roles:',
+            value: 'ignore'
           },
+          {
+            name: 'Presence:',
+            value: codeBlock(
+              "fix",
+              `${
+                member.presence?.activities
+                  .filter((item) => item.name != "Custom Status")
+                  .map((activity) => `${activity.name}`)
+                  .join("\n") || "No activities"
+              }`
+            )
+          }
         ])
         .setColor("#2F3136")
         .setFooter({
@@ -207,6 +226,7 @@ export default new CommandClass({
         .setTimestamp();
 
       interaction.reply({ embeds: [embed] });
+
     } else {
       // other embed
       const embed = new EmbedBuilder()

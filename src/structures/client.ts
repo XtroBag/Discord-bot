@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, Collection, ClientEvents } from 'discord.js';
 
 import { EventClass } from './event.js';
-import { CommandClass } from './slash.js';
+import { SlashClass } from './slash.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -28,7 +28,7 @@ export class ExtendedClient extends Client {
                 version: '10'
             }
         });
-        this.slash = new Collection<string, CommandClass>();
+        this.slash = new Collection<string, SlashClass>();
         this.cooldown = new Collection<string, Collection<string, number>>();
         this.text = new Collection<string, TextClass>()
     };
@@ -45,7 +45,7 @@ export class ExtendedClient extends Client {
             for (const file of commandFiles) {
                 const filePath = path.join(commandPath, file)
 
-                const command = await dynamicImport(filePath) as CommandClass;
+                const command = await dynamicImport(filePath) as SlashClass;
 
                 // this is a testing line for new system i'm trying
                 //@ts-ignore

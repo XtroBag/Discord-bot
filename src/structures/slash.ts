@@ -16,7 +16,7 @@ interface CommandOptions {
     execute: (client?: ExtendedClient, ...args: any) => Promise<any>;
 };
 
-export class CommandClass {
+export class SlashClass {
     data: CommandOptions['data'];
     opt?: CommandOptions['opt'];
     execute?: CommandOptions['execute'];

@@ -1,5 +1,5 @@
 import { REST, Routes } from 'discord.js';
-import type { CommandClass } from './structures/slash.js';
+import type { SlashClass } from './structures/slash.js';
 import 'dotenv/config';
 
 import fs from 'node:fs';
@@ -19,7 +19,7 @@ for (const category of commandFolders) {
 	const commandFiles = fs.readdirSync(commandPath).filter(file => file.endsWith('.js'));
 	for (const fileName of commandFiles) {
 		const filePath = path.join(commandPath, fileName);
-		const command = await dynamicImport(filePath) as CommandClass;
+		const command = await dynamicImport(filePath) as SlashClass;
 		
 		commands.push(command.data);
 	};
@@ -40,13 +40,13 @@ const rest = new REST().setToken(process.env.TOKEN);
 			data = await rest.put(
 				Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
 				{ body: commands },
-			) as CommandClass['data'][];
+			) as SlashClass['data'][];
 		} else {
 			// The put method is used to fully refresh all commands in all guilds with the current set
 			data = await rest.put(
 				Routes.applicationCommands(process.env.CLIENT_ID),
 				{ body: commands },
-			) as CommandClass['data'][];
+			) as SlashClass['data'][];
 		};
 
 		console.log(`Successfully reloaded ${data.length} application (/) commands.`);

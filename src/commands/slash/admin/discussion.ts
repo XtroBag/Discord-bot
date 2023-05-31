@@ -7,10 +7,10 @@ import {
   ChannelType,
   EmbedBuilder,
 } from "discord.js";
-import { CommandClass } from "../../../structures/slash.js";
+import { SlashClass } from "../../../structures/slash.js";
 import { Colors, Emojis } from "../../../../config.js";
 
-export default new CommandClass({
+export default new SlashClass({
   data: {
     name: "discussion",
     description: "Setup a channel to talk too the bot",

@@ -1,7 +1,7 @@
 import { ApplicationCommandType, MessageContextMenuCommandInteraction, hyperlink } from 'discord.js';
-import { CommandClass } from '../../../structures/slash.js';
+import { SlashClass } from '../../../structures/slash.js';
 
-export default new CommandClass({
+export default new SlashClass({
     data: {
         name: 'echo',
         type: ApplicationCommandType.Message,

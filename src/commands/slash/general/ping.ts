@@ -1,7 +1,7 @@
 import { ApplicationCommandType, ChatInputCommandInteraction, inlineCode } from 'discord.js';
-import { CommandClass } from '../../../structures/slash.js';
+import { SlashClass } from '../../../structures/slash.js';
 
-export default new CommandClass({
+export default new SlashClass({
     data: {
         name: 'ping',
         description: 'Pong! Test the bots ping',

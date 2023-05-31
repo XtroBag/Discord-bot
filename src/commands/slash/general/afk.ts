@@ -7,11 +7,11 @@ import {
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
-import { CommandClass } from "../../../structures/slash.js";
+import { SlashClass } from "../../../structures/slash.js";
 import { AFK } from "../../../database/modals/afk.js";
 import { Colors, Emojis } from "../../../../config.js";
 
-export default new CommandClass({
+export default new SlashClass({
   data: {
     name: "afk",
     description: "Display yourself AFK if your not at you're device",
