@@ -171,13 +171,15 @@ export default new SlashClass({
               "\nNickname:" +
               ` \`\`${member.nickname ?? "None"}\`\`` +
               "\nBadges:" +
-              ` ${badges.join(" ") || " ``None``"}` + 
-              "\nID:" + 
+              ` ${badges.join(" ") || " ``None``"}` +
+              "\nID:" +
               ` \`\`${member.id}\`\`` +
               "\nDiscriminator:" +
               ` \`\`#${member.user.discriminator}\`\`` +
               "\nStatus:" +
-              ` ${mode[member.presence?.status ?? "offline"]} ${status[member.presence?.status ?? "offline"]}` +
+              ` ${mode[member.presence?.status ?? "offline"]} ${
+                status[member.presence?.status ?? "offline"]
+              }` +
               "\nStreaming:" +
               `${
                 member.presence?.activities.filter(
@@ -197,26 +199,33 @@ export default new SlashClass({
               }` +
               "\nBot:" +
               ` ${bot}`,
-          }, {
-            name: 'Server:',
-            value: "Owner:" + ` ${member.guild.ownerId === member.id ? Emojis.Check : Emojis.Cross}` + 
-            "" + ``
-          }, {
-            name: 'Roles:',
-            value: 'ignore'
           },
           {
-            name: 'Presence:',
+            name: "Server:",
+            value:
+              "Owner:" +
+              ` ${
+                member.guild.ownerId === member.id ? Emojis.Check : Emojis.Cross
+              }` +
+              "" +
+              ``,
+          },
+          {
+            name: "Roles:",
+            value: `ignore`,
+          },
+          {
+            name: "Presence:",
             value: codeBlock(
               "fix",
               `${
-                member.presence?.activities
+                member.presence.activities
                   .filter((item) => item.name != "Custom Status")
                   .map((activity) => `${activity.name}`)
                   .join("\n") || "No activities"
               }`
-            )
-          }
+            ),
+          },
         ])
         .setColor("#2F3136")
         .setFooter({
@@ -225,7 +234,17 @@ export default new SlashClass({
         })
         .setTimestamp();
 
-      interaction.reply({ embeds: [embed] });
+      interaction.reply({ embeds: [embed], ephemeral: true });
+
+
+
+    
+
+
+
+
+
+
 
     } else {
       // other embed
