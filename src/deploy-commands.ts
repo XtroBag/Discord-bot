@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const commands = []
 
-const commandFolderPath = fileURLToPath(new URL('slash', import.meta.url));
+const commandFolderPath = fileURLToPath(new URL('../src/commands/slash', import.meta.url));
 const commandFolders = fs.readdirSync(commandFolderPath);
 
 const dynamicImport = (path: string) => import(pathToFileURL(path).toString()).then((module) => module?.default);
