@@ -10,13 +10,16 @@ export default new TextClass({
   data: {
     name: "help",
     description: "informaton about commands",
+    usage: "help <cmd>",
     ownerOnly: false,
-    folder: "general",
+    category: "general",
   },
   // @ts-ignore
   async run(client, message, args) {
-
     // Maybe add a feature to check if too many commands are listed on the embed and *MAYBE* make embed pages for each category
+    //------------------------------------------------------------------
+
+    if (!args[0]) {
 
     const emojis = {
       general: "🧶",
@@ -25,7 +28,7 @@ export default new TextClass({
     };
 
     const directories = [
-      ...new Set(message.client.text.map((cmd) => cmd.data.folder)),
+      ...new Set(message.client.text.map((cmd) => cmd.data.category)),
     ];
 
     const formatString = (str) =>
@@ -33,7 +36,7 @@ export default new TextClass({
 
     const categories = directories.map((dir) => {
       const getCommands = message.client.text
-        .filter((cmd) => cmd.data.folder === dir)
+        .filter((cmd) => cmd.data.category === dir)
         .map((cmd) => {
           return {
             name: cmd.data.name,
@@ -54,7 +57,7 @@ export default new TextClass({
     const components = (state: boolean) => [
       new ActionRowBuilder<StringSelectMenuBuilder>().addComponents([
         new StringSelectMenuBuilder()
-          .setCustomId('custom')
+          .setCustomId("custom")
           .setPlaceholder("Please Select a category")
           .setDisabled(state)
           .addOptions(
@@ -134,5 +137,28 @@ export default new TextClass({
         });
       }
     });
+
+  } else {
+    const name = args[0];
+    if (!name)
+      return message.reply({
+        content:
+          "Please provide a cmd name if you wanna search a command alone",
+      });
+
+    const command = client.text.find((cmd) => cmd.data.name === name);
+    if (!command)
+      return message.reply({ content: "This command does not exist" });
+
+    const infoembed = new EmbedBuilder().setTitle(`Commands Info`)
+      .setDescription(`
+    Name: ${command.data.name}
+    Description: ${command.data.description}
+    Usage: ${command.data.usage}
+    OwnerOnly: ${command.data.ownerOnly}
+    `);
+
+    message.reply({ embeds: [infoembed] });
+  }
   },
 });

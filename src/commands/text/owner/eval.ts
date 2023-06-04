@@ -6,8 +6,9 @@ export default new TextClass({
   data: {
     name: "eval",
     description: "Run code in chat",
+    usage: "eval <code>",
     ownerOnly: true,
-    folder: 'owner'
+    category: 'owner'
   },
   // @ts-ignore
   async run(client, message, args) {
@@ -29,7 +30,8 @@ export default new TextClass({
       embed.setDescription(codeBlock('js', output));
       await msg.edit({ embeds: [embed] });
     } catch (e) {
-      embed.setTitle("An Error has occured");
+      embed.setTitle("An Error has occured")
+      embed.setDescription(codeBlock('js', e))
       return await msg.edit({ embeds: [embed] });
     }
   },

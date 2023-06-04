@@ -4,8 +4,9 @@ export default new TextClass({
     data: {
         name: 'ping',
         description: 'use the ping command',
+        usage: 'ping',
         ownerOnly: false,
-        folder: 'general'
+        category: 'general'
     },
     // @ts-ignore
    async run(client, message, args) {

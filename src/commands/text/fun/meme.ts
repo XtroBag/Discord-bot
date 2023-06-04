@@ -4,8 +4,9 @@ export default new TextClass({
     data: {
         name: 'meme',
         description: 'get random memes',
+        usage: 'meme',
         ownerOnly: false,
-        folder: 'fun'
+        category: 'fun'
     },
     // @ts-ignore
    async run(client, message, args) {

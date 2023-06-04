@@ -6,8 +6,9 @@ interface CommandOptions {
     data: {
         name: string,
         description: string,
+        usage: string,
         ownerOnly: boolean;
-        folder: string;
+        category: string;
     };
     run: (client?: ExtendedClient, message?: Message, args?: any) => Promise<any>;
 };
