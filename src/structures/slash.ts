@@ -1,4 +1,4 @@
-import type { PermissionResolvable, ApplicationCommandData, AutocompleteInteraction, ChatInputCommandInteraction } from "discord.js";
+import type { PermissionResolvable, ApplicationCommandData, AutocompleteInteraction } from "discord.js";
 import { ExtendedClient } from "./client.js";
 
 interface CustomOptions {
@@ -11,14 +11,14 @@ interface CustomOptions {
 };
 
 interface CommandOptions {
-    data?: ApplicationCommandData;
+    data: ApplicationCommandData;
     opt?: CustomOptions;
-    auto?: (interaction: AutocompleteInteraction) => Promise<any>;
-    execute?: (client: ExtendedClient, interaction: ChatInputCommandInteraction<'cached'>) => Promise<any>;
+    auto?: (interaction?: AutocompleteInteraction) => Promise<any>;
+    execute: (client?: ExtendedClient, interaction?: any) => Promise<any>;
 };
 
 export class SlashClass {
-    data?: CommandOptions['data'];
+    data: CommandOptions['data'];
     opt?: CommandOptions['opt'];
     auto?: CommandOptions['auto'];
     execute?: CommandOptions['execute'];

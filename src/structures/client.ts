@@ -19,7 +19,8 @@ export class ExtendedClient extends Client {
                 GatewayIntentBits.GuildPresences,
                 GatewayIntentBits.GuildMembers,
                 GatewayIntentBits.MessageContent,
-                GatewayIntentBits.GuildMessages
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.GuildVoiceStates
             ],
             failIfNotExists: false,
             rest: {

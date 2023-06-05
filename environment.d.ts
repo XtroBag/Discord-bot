@@ -1,5 +1,5 @@
 import { Collection } from 'discord.js';
-import { CommandClass } from './src/structures/slash.ts';
+import { SlashClass } from './src/structures/slash.ts';
 import { TextClass } from './src/structures/text.ts';
 
 declare global {
@@ -16,7 +16,7 @@ declare global {
 
 declare module 'discord.js' {
     interface Client {
-        slash: Collection<string, CommandClass>;
+        slash: Collection<string, SlashClass>;
         cooldown: Collection<string, Collection<string, number>>;
         text: Collection<string, TextClass>
     }

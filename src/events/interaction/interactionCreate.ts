@@ -16,9 +16,7 @@ export default new EventClass({
               "All commands are globally disabled currently, Try again later!",
           });
         } else {
-          const command = interaction.client.slash.get(
-            interaction.commandName
-          );
+          const command = interaction.client.slash.get(interaction.commandName);
 
           if (!command?.data) {
             console.error(
@@ -167,6 +165,16 @@ export default new EventClass({
       }
     }
 
+    if (interaction.isAutocomplete()) {
+      const autocomplete = client.slash.get(interaction.commandName);
+
+      try {
+        await autocomplete.auto(interaction);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     if (interaction.isModalSubmit()) {
       const reason = interaction.fields.getTextInputValue("afk_reason");
 
@@ -231,5 +239,6 @@ export default new EventClass({
         await interaction.update({ embeds: [embed], components: [] });
       }
     }
+
   },
 });
