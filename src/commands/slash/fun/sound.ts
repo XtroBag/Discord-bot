@@ -84,7 +84,7 @@ export default new SlashClass({
       filter.map((data) => {
         let value: string;
 
-        if (data.url.length >= 99) {
+        if (data.url.length >= 100) {
           value = data.url.replace(
             "https://cdn.discordapp.com/ephemeral-attachments/",
             ""
@@ -179,7 +179,7 @@ export default new SlashClass({
 
         const resource = createAudioResource(
           `https://cdn.discordapp.com/ephemeral-attachments/${audio}`
-        ); // [AUDIO] is where the link of the database sound must go from autocomplete
+        );
 
         player.play(resource);
 
