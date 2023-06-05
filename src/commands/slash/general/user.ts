@@ -30,6 +30,10 @@ export default new SlashClass({
     guildOnly: false,
   },
   // @ts-ignore
+
+
+// USER COMMAND IS BROKEN WHEN MENTIONING A USER OR JUST SEARCHING
+
   async execute(client, interaction: ChatInputCommandInteraction<"cached">) {
     let user = interaction.options.getUser("member");
     let member = interaction.guild.members.cache.get(user.id);

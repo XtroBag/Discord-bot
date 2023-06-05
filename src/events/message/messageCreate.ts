@@ -3,9 +3,9 @@ import "dotenv/config";
 import { AFK } from "../../database/modals/afk.js";
 import { EmbedBuilder } from "discord.js";
 import { Colors, Emojis } from "../../../config.js";
-import { Guild } from "../../database/modals/guild.js";
+// import { Guild } from "../../database/modals/guild.js";
 import { Config } from "../../../config.js";
-import axios from "axios";
+// import axios from "axios";
 
 export default new EventClass({
   name: "messageCreate",
@@ -128,36 +128,35 @@ export default new EventClass({
 
 
     // FIX THIS SYSTEM BECAUSE THIS CHATBOT API DOESNT WORK AND NEEDS MONEY CHANGE FOR ANOTHER ONE
-    const channel = await Guild.findOne({
-      guildName: message.guild.name,
-      id: message.guild.id,
-    });
+    // const channel = await Guild.findOne({
+    //   guildName: message.guild.name,
+    //   id: message.guild.id,
+    // });
 
-    if (!channel) return;
+    // if (!channel) return;
 
-    const { discussion: msg } = channel;
+    // const { discussion: msg } = channel;
 
-    if (message.channel.id === msg.channel) {
-      const client = axios.create({
-        headers: {
-          Authorization: "Bearer " + process.env.OPENAI_API_KEY,
-        },
-      });
+    // if (message.channel.id === msg.channel) {
+    //   const client = axios.create({
+    //     headers: {
+    //       Authorization: "Bearer " + process.env.OPENAI_API_KEY,
+    //     },
+    //   });
 
-      const params = {
-        prompt: message.content,
-        model: "text-davinci-003",
-        max_tokens: 2048,
-        temperature: 0.5,
-      };
+    //   const params = {
+    //     prompt: message.content,
+    //     model: "text-davinci-003",
+    //     max_tokens: 2048,
+    //     temperature: 0.5,
+    //   };
 
-      const response = await client.post(
-        "https://api.openai.com/v1/chat/completions",
-        params
-      );
-      message
-        .reply({ content: `${response.data.choices[0].text}` })
-        .catch(() => {});
-    }
+    //   const response = await client.post(
+    //     "https://api.openai.com/v1/chat/completions",
+    //     params
+    //   );
+    //   message
+    //     .reply({ content: `${response.data.choices[0].text}` })
+    //     .catch(() => {});
   },
 });
