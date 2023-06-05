@@ -46,7 +46,9 @@ export default new SlashClass({
   async execute(client, interaction: ChatInputCommandInteraction<"cached">) {
     const choice = interaction.options.getSubcommand();
     const user = interaction.options.getUser("user");
-    const member = interaction.options.getMember('user');
+    const member = interaction.options.getMember("user");
+
+    console.log(choice);
 
     if (choice === "user") {
       let flags = user.flags.toArray();
@@ -217,18 +219,6 @@ export default new SlashClass({
                 ` ${bot}`,
             },
             {
-              name: "Server:",
-              value:
-                "Owner:" +
-                ` ${
-                  member.guild.ownerId === member.id
-                    ? Emojis.Check
-                    : Emojis.Cross
-                }` +
-                "" +
-                ``,
-            },
-            {
               name: "Roles:",
               value: `ignore`,
             },
@@ -262,8 +252,27 @@ export default new SlashClass({
 
         interaction.reply({ embeds: [embed] });
       }
-    } else if (choice === "guild") {
-      await interaction.reply({ content: "picked guild" });
+    }
+
+    if (choice === "guild") {
+      const embed = new EmbedBuilder().setTitle("Guild information").setFields([
+        {
+          name: "General:",
+          value:
+            "\nName:" + 
+            ` ${interaction.guild.name}` +
+            "\nDescription:" + 
+            ` ${interaction.guild.description ?? 'None'}` +
+            "\nOwner:" +
+            ` ${interaction.guild.ownerId === interaction.member.id
+            ? Emojis.Check
+            : Emojis.Cross}` +
+            "" +
+            ``,
+        },
+      ]);
+
+      await interaction.reply({ embeds: [embed] });
     }
   },
 });
