@@ -282,7 +282,7 @@ export default new SlashClass({
           name: `> ${Emojis.Information} Stats`,
           value: 
           "\nMembers:" +
-          ` ${interaction.guild.memberCount}` + 
+          ` ${interaction.guild.memberCount}` +  //code a way to put a start behind members too show it's eleagble to be partnered with that amount of members
           "" + 
           `` + 
           "" + 

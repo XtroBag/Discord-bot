@@ -1,6 +1,6 @@
 {
-  "name": "icy",
-  "version": "1.0.0",
+  "name": "cubed",
+  "version": "1.4.0",
   "description": "Basic discord bot using discord.js with typescript",
   "main": "dist/index.js",
   "types": "environment.d.ts",
