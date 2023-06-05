@@ -6,7 +6,7 @@ import {
   codeBlock,
 } from "discord.js";
 import { SlashClass } from "../../../structures/slash.js";
-import { Badges, Emojis } from "../../../../config.js";
+import { Badges, Colors, Emojis } from "../../../../config.js";
 
 export default new SlashClass({
   data: {
@@ -257,7 +257,7 @@ export default new SlashClass({
     if (choice === "guild") {
       const embed = new EmbedBuilder().setTitle("Guild information").setFields([
         {
-          name: "General:",
+          name: `> ${Emojis.Information} General`,
           value:
             "\nName:" + 
             ` ${interaction.guild.name}` +
@@ -268,9 +268,33 @@ export default new SlashClass({
             ? Emojis.Check
             : Emojis.Cross}` +
             "" +
+            `` + 
+            "" +
+            `` + 
+            "" +
+            `` + 
+            "" +
+            `` + 
+            "" +
             ``,
         },
-      ]);
+        {
+          name: `> ${Emojis.Information} Stats`,
+          value: 
+          "\nMembers:" +
+          ` ${interaction.guild.memberCount}` + 
+          "" + 
+          `` + 
+          "" + 
+          `` + 
+          "" + 
+          ``
+        },
+        {
+          name: `> ${Emojis.Information} Channels`,
+          value: "nothing yet"
+        }
+      ]).setColor(Colors.Information)
 
       await interaction.reply({ embeds: [embed] });
     }
