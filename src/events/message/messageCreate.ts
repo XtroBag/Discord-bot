@@ -55,7 +55,7 @@ export default new EventClass({
 
     message.mentions.users
       .filter((u) => !u.bot && u.id !== message.author.id)
-      .forEach(async (user) => {
+      .every(async (user) => {
         const data = await AFK.findOne({ afk: true, id: user.id });
 
         if (!data) return;
